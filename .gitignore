@@ -1,0 +1,3 @@
+tests/.vagrant/*
+*.retry
+*/*.retry

@@ -1,0 +1,26 @@
+Vagrant.configure("2") do |debian|
+  debian.vm.box = "debian/stretch64"
+  debian.vm.define "figlet" do |fig|
+     fig.vm.hostname = "test-figlet"
+     fig.vm.network "private_network", ip: "192.168.77.202"
+     fig.vm.provision :ansible do |ansible|
+       ansible.limit = "all"
+       #ansible.inventory_path = "test/hosts/vagrant"
+       ansible.playbook = "main.yml"
+    end
+  end
+end
+
+#Vagrant.configure("2") do |redhat|
+#  redhat.vm.box = "centos/7"
+#  redhat.vm.define "Zabbix_centos" do |zabbix_centos|
+#     zabbix_centos.vm.hostname = "zabbix"
+#     zabbix_centos.vm.network "private_network", ip: "192.168.77.201"
+#     zabbix_centos.vm.provision :ansible do |ansible|
+#       ansible.limit = "all"
+#       #ansible.inventory_path = "test/hosts/vagrant"
+#       ansible.playbook = "main.yml"
+#    end
+#  end
+#end
+

@@ -1,0 +1,17 @@
+---
+
+- name: install figlet 
+  apt: pkg=figlet state=present
+  update_cache: false
+
+- name: Updates motd file with aschii graphics
+  shell: figlet -tc {{ ansible_hostname }} > /etc/motd
+  changed_when: false 
+
+- name: Environemnt additions
+  lineinfile:
+    path: /etc/motd
+    line: "     ############¤¤¤¤ {{item.env}} - {{item.warn}} ¤¤¤¤############" 
+  with_items:
+    - "{{ environment }}"
+  changed_when: false

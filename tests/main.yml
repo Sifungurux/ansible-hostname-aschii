@@ -1,0 +1,7 @@
+---
+- hosts: all
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+  roles:
+          - {role: ansible-hostname-aschii, environment: [{env: "production", warn: "Please be carefull"}]}

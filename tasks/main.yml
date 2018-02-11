@@ -2,7 +2,17 @@
 
 - name: install figlet 
   apt: pkg=figlet state=present
-  update_cache: false
+  when: ansible_os_family == 'Debian'
+
+- name: Download foo.conf
+  get_url:
+    url: http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/f/figlet-2.2.5-9.el7.x86_64.rpm
+    dest: /tmp
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+ 
+- name: Install figlet on Redhet
+  yum: name=/tmp/figlet-2.2.5-9.el7.x86_64.rpm  state=present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
 - name: Updates motd file with aschii graphics
   shell: figlet -tc {{ ansible_hostname }} > /etc/motd
@@ -14,4 +24,3 @@
     line: "     ############¤¤¤¤ {{item.env}} - {{item.warn}} ¤¤¤¤############" 
   with_items:
     - "{{ environment }}"
-  changed_when: false

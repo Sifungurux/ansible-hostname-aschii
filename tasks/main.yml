@@ -34,7 +34,12 @@
 
 
 - lineinfile:
-    path: /etc/httpd/conf/httpd.conf
+    path: /etc/ssh/sshd_config
     regexp: '^Listen '
     insertafter: '^#Banner '
     line: 'Banner /usr/local/bin/dynbanner'
+  when: banner == true
+
+- name: restart ssh server
+  service: name=sshd state=restarted
+  

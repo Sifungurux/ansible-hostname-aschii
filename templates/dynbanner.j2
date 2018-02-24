@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+reset=`tput sgr0`
+
+ 
+figlet $(hostname)
+printf "\n"
+ 
+echo "$(tput setaf 1)$(tput setab 0)#######################################################${reset}"
+echo "$(tput setaf 1)$(tput setab 0)#                                                     #${reset}"
+echo "$(tput setaf 1)$(tput setab 0)#           PRODUCTION SERVER - BECAREFULL            #${reset}"
+echo "$(tput setaf 1)$(tput setab 0)#                                                     #${reset}"
+echo "$(tput setaf 1)$(tput setab 0)#######################################################${reset}"

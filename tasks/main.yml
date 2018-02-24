@@ -14,13 +14,27 @@
   yum: name=/tmp/figlet-2.2.5-9.el7.x86_64.rpm  state=present
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
-- name: Updates motd file with aschii graphics
-  shell: figlet -tc {{ ansible_hostname }} > /etc/motd
-  changed_when: false 
+- name: Server remote IP
+  template:
+    src: templates/motd.j2
+    dest: /usr/local/bin/dymotd
+    mode: 0755
 
-- name: Environemnt additions
+- name: Add dynamic login texst to bashrc
   lineinfile:
-    path: /etc/motd
-    line: "     ############¤¤¤¤ {{item.env}} - {{item.warn}} ¤¤¤¤############" 
-  with_items:
-    - "{{ environment }}"
+    path: /etc/profile
+    line: '/usr/local/bin/dymotd'
+
+
+- name: Add hostname to banner text
+  template:
+    src: templates/dynbanner.j2
+    dest: /usr/local/bin/dynbanner
+    mode: 700
+
+
+- lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^Listen '
+    insertafter: '^#Banner '
+    line: 'Banner /usr/local/bin/dynbanner'

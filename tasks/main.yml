@@ -33,11 +33,10 @@
     mode: 700
 
 
-- lineinfile:
+- replace:
     path: /etc/ssh/sshd_config
-    regexp: '^Listen '
-    insertafter: '^#Banner '
-    line: 'Banner /usr/local/bin/dynbanner'
+    regexp: '^#Banner '
+    replace: 'Banner /usr/local/bin/dynbanner'
   when: banner == true
 
 - name: restart ssh server

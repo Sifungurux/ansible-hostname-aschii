@@ -1,0 +1,7 @@
+[PRODUCTION]
+figlet-Centos
+
+[PRODUCTION:vars]
+env = "PRODUCTION"
+warn = "BE CAREFULL"
+note = "TEST NOTE"

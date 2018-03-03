@@ -11,9 +11,9 @@ roles:
   
 There are three varibles that can be set
 
-env  - for environemnt (testing, develop, Pre-prod and Prod
-warn - a Warning messages
-note - What does this server do eg. This is a Jenkins/Travis server
+- env  - for environemnt (testing, develop, Pre-prod and Prod
+- warn - a Warning messages
+- note - What does this server do eg. This is a Jenkins/Travis server
 
 Using the Vagrantfile to test, this is the inventory file generated
 

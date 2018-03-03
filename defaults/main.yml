@@ -1,9 +1,4 @@
 ---
 
 banner: true
-server_info: 
-  all: true
-  stats: false
-  user: false
-  packages: true
 

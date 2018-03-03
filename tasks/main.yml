@@ -14,13 +14,13 @@
   yum: name=/tmp/figlet-2.2.5-9.el7.x86_64.rpm  state=present
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
-- name: Server remote IP
+- name: Setting up dynamic login text
   template:
     src: templates/motd.j2
     dest: /usr/local/bin/dymotd
     mode: 0755
 
-- name: Add dynamic login texst to bashrc
+- name: Add dynamic script to bashrc
   lineinfile:
     path: /etc/profile
     line: '/usr/local/bin/dymotd'
@@ -37,8 +37,6 @@
     path: /etc/ssh/sshd_config
     regexp: '^#Banner '
     replace: 'Banner /usr/local/bin/dynbanner'
+  notify:
+    - restart ssh
   when: banner == true
-
-- name: restart ssh server
-  service: name=sshd state=restarted
-  

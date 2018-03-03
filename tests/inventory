@@ -1,7 +1,7 @@
 [PRODUCTION]
-figlet-Centos
+figlet_cen
 
 [PRODUCTION:vars]
-env = "PRODUCTION"
-warn = "BE CAREFULL"
-note = "TEST NOTE"
+note="TEST NOTE"
+env="PRODUCTION"
+warn="BE CAREFULL"

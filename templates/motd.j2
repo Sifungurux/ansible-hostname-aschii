@@ -12,19 +12,19 @@ blue=`tput setaf 4`
 reset=`tput sgr0`
 SERVER_ENV_LENGHT=$(echo -n "{{env}}" | wc -c)
 SERVER_WARN_LENGHT=$(echo -n "{{warn}}" | wc -c)
+SERVER_NOTE_LENGHT=$(echo -n "{{note}}" | wc -c)
 COLUMNS=$(tput cols)
-COUNTOFHASH=$(printf "%s\n" $((($SERVER_ENV_LENGHT+$SERVER_WARN_LENGHT)+24)))
-HASHCHAR=$(printf '%*s\n' "${COUNTOFHASH}" '' | tr ' ' \#)
+
+COUNTOFHASH="$(($SERVER_ENV_LENGHT+$SERVER_WARN_LENGHT+24))"
+HASHCHAR=$(printf '%*s\n' "$COUNTOFHASH" '' | tr ' ' \#)
 
 figlet -tc $(hostname)
 printf "\n"
 
-printf '\e[1;31m%*s\n\e[m' $((($SERVER_ENV_LENGHT+$SERVER_WARN_LENGHT+$COLUMNS+(${COUNTOFHASH}/2))/2)) "$HASHCHAR"
+printf '\e[1;31m%*s\n\e[m' $((($COUNTOFHASH+$COLUMNS)/2)) "$HASHCHAR"
 printf "\n"
 printf '\e[1;31m%*s\n\e[m' $((($SERVER_ENV_LENGHT+$SERVER_WARN_LENGHT+$COLUMNS)/2)) "{{env}} - {{warn}}"
 printf "\n"
-printf '\e[1;31m%*s\n\e[m' $((($SERVER_ENV_LENGHT+$SERVER_WARN_LENGHT+$COLUMNS+(${COUNTOFHASH}/2))/2)) "$HASHCHAR"
+printf '\e[1;31m%*s\n\e[m' $((($COUNTOFHASH+$COLUMNS)/2)) "$HASHCHAR"
 echo
-{% if note %}
-printf '\e[1;31m%*s\n\e[m' $((($SERVER_ENV_LENGHT+$SERVER_WARN_LENGHT+$COLUMNS)/2)) "{{note}}"
-{% endif %}
+printf '\e[1;31m%*s\n\e[m' $(((8+$SERVER_NOTE_LENGHT+$COLUMNS)/2)) "-->> {{note}} <<--"

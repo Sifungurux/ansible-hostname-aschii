@@ -15,8 +15,7 @@ SERVER_WARN_LENGHT=$(echo -n "{{warn}}" | wc -c)
 SERVER_NOTE_LENGHT=$(echo -n "{{note}}" | wc -c)
 COLUMNS=$(tput cols)
 
-COUNTOFHASH="$(($SERVER_ENV_LENGHT+$SERVER_WARN_LENGHT+24))"
-HASHCHAR=$(printf '%*s\n' "$COUNTOFHASH" '' | tr ' ' \#)
+HASHCHAR=$(printf '%*s\n' "$COLUMNS" '' | tr ' ' \#)
 
 figlet -tc $(hostname)
 printf "\n"

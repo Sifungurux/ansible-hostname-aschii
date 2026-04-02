@@ -1,7 +1,6 @@
 ---
-- hosts: PRODUCTION
-  become: yes
-  become_method: sudo
-  gather_facts: yes
+- hosts: test
+  become: true
+  gather_facts: true
   roles:
-          - ansible-hostname-aschii
+    - role: ansible-hostname-aschii

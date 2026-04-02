@@ -1,7 +1,0 @@
-[PRODUCTION]
-figlet_cen
-
-[PRODUCTION:vars]
-note="TEST NOTE"
-env="PRODUCTION"
-warn="BE CAREFULL"

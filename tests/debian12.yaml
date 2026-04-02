@@ -1,0 +1,29 @@
+# Lima VM definition for Ansible testing
+# Usage: limactl start --name=hostname-ascii-test tests/debian12.yaml
+
+vmType: qemu  # use "vz" on macOS 13+ for better performance
+
+images:
+  - location: "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2"
+    arch: "x86_64"
+  - location: "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-arm64.qcow2"
+    arch: "aarch64"
+
+cpus: 2
+memory: "1GiB"
+disk: "10GiB"
+
+mounts: []
+
+ssh:
+  localPort: 0
+  loadDotSSHPubKeys: true
+
+provision:
+  - mode: system
+    script: |
+      #!/bin/bash
+      set -eux
+      apt-get update -q
+      apt-get install -y python3 sudo
+      echo "%sudo ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nopasswd

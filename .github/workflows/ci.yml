@@ -53,3 +53,7 @@ jobs:
 
       - name: Run Molecule
         run: molecule test
+        env:
+          ANSIBLE_ROLES_PATH: ".."
+        env:
+          ANSIBLE_ROLES_PATH: ".."

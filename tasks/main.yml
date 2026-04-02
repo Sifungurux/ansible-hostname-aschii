@@ -20,6 +20,12 @@
     line: /usr/local/bin/dynmotd
     state: present
 
+- name: Install openssh-server for banner support
+  ansible.builtin.package:
+    name: openssh-server
+    state: present
+  when: banner | bool
+
 - name: Deploy SSH pre-auth banner
   ansible.builtin.template:
     src: dynbanner.j2

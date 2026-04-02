@@ -45,6 +45,5 @@
     path: /etc/ssh/sshd_config
     regexp: '^#?Banner'
     line: 'Banner /etc/ssh/banner'
-    validate: /usr/sbin/sshd -t -f %s
   when: banner | bool
   notify: Restart ssh

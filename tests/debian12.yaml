@@ -1,3 +1,4 @@
+---
 # Lima VM definition for Ansible testing
 # Usage: limactl start --name=hostname-ascii-test tests/debian12.yaml
 

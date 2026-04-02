@@ -8,7 +8,7 @@ on:
     branches: [master]
 
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
   ANSIBLE_DEPRECATION_WARNINGS: "false"
 
 jobs:
@@ -32,6 +32,8 @@ jobs:
 
       - name: Run ansible-lint
         run: ansible-lint
+        env:
+          ANSIBLE_ROLES_PATH: ".."
 
   molecule:
     name: Molecule
@@ -51,3 +53,7 @@ jobs:
 
       - name: Run Molecule
         run: molecule test
+        env:
+          ANSIBLE_ROLES_PATH: ".."
+        env:
+          ANSIBLE_ROLES_PATH: ".."

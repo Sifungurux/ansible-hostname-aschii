@@ -1,42 +1,38 @@
 ---
+- name: Include OS-specific variables
+  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
+  failed_when: false
 
-- name: install figlet 
-  apt: pkg=figlet state=present
-  when: ansible_os_family == 'Debian'
+- name: Install figlet
+  ansible.builtin.package:
+    name: figlet
+    state: present
 
-- name: Download foo.conf
-  get_url:
-    url: http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/f/figlet-2.2.5-9.el7.x86_64.rpm
-    dest: /tmp
-  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
- 
-- name: Install figlet on Redhet
-  yum: name=/tmp/figlet-2.2.5-9.el7.x86_64.rpm  state=present
-  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+- name: Deploy dynamic MOTD script
+  ansible.builtin.template:
+    src: motd.j2
+    dest: /usr/local/bin/dynmotd
+    mode: "0755"
 
-- name: Setting up dynamic login text
-  template:
-    src: templates/motd.j2
-    dest: /usr/local/bin/dymotd
-    mode: 0755
-
-- name: Add dynamic script to bashrc
-  lineinfile:
+- name: Enable dynamic MOTD on login
+  ansible.builtin.lineinfile:
     path: /etc/profile
-    line: '/usr/local/bin/dymotd'
+    line: /usr/local/bin/dynmotd
+    state: present
 
+- name: Deploy SSH pre-auth banner
+  ansible.builtin.template:
+    src: dynbanner.j2
+    dest: /etc/ssh/banner
+    mode: "0644"
+  when: banner | bool
+  notify: Restart ssh
 
-- name: Add hostname to banner text
-  template:
-    src: templates/dynbanner.j2
-    dest: /usr/local/bin/dynbanner
-    mode: 700
-
-
-- replace:
+- name: Configure sshd to display banner
+  ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: '^#Banner '
-    replace: 'Banner /usr/local/bin/dynbanner'
-  notify:
-    - restart ssh
-  when: banner == true
+    regexp: '^#?Banner'
+    line: 'Banner /etc/ssh/banner'
+    validate: /usr/sbin/sshd -t -f %s
+  when: banner | bool
+  notify: Restart ssh

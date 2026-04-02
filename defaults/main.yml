@@ -1,4 +1,5 @@
 ---
-
 banner: true
-
+motd_env: "PRODUCTION"
+motd_warn: "AUTHORIZED ACCESS ONLY"
+motd_note: "Unauthorized access is strictly prohibited and may be prosecuted"

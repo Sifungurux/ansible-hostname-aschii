@@ -1,29 +1,33 @@
 #!/bin/sh
-
 [ -r /etc/lsb-release ] && . /etc/lsb-release
 
 if [ -z "$DISTRIB_DESCRIPTION" ] && [ -x /usr/bin/lsb_release ]; then
-        # Fall back to using the very slow lsb_release utility
-        DISTRIB_DESCRIPTION=$(lsb_release -s -d)
+    DISTRIB_DESCRIPTION=$(lsb_release -s -d)
 fi
 
-green=`tput setaf 2`
-blue=`tput setaf 4`
-reset=`tput sgr0`
-SERVER_ENV_LENGHT=$(echo -n "{{env}}" | wc -c)
-SERVER_WARN_LENGHT=$(echo -n "{{warn}}" | wc -c)
-SERVER_NOTE_LENGHT=$(echo -n "{{note}}" | wc -c)
+green=$(tput setaf 2)
+blue=$(tput setaf 4)
+red=$(tput setaf 1)
+reset=$(tput sgr0)
 COLUMNS=$(tput cols)
 
-HASHCHAR=$(printf '%*s\n' "$COLUMNS" '' | tr ' ' \#)
+HASHCHAR=$(printf '%*s' "$COLUMNS" '' | tr ' ' '#')
+ENV_LINE="{{ motd_env }} - {{ motd_warn }}"
+NOTE_LINE="-->> {{ motd_note }} <<--"
+ENV_LEN=$(echo -n "$ENV_LINE" | wc -c)
+NOTE_LEN=$(echo -n "$NOTE_LINE" | wc -c)
 
-figlet -tc $(hostname)
+figlet -tc "$(hostname)"
 printf "\n"
-
-printf '\e[1;31m%*s\n\e[m' $((($COUNTOFHASH+$COLUMNS)/2)) "$HASHCHAR"
+printf "${red}%s${reset}\n" "$HASHCHAR"
 printf "\n"
-printf '\e[1;31m%*s\n\e[m' $((($SERVER_ENV_LENGHT+$SERVER_WARN_LENGHT+$COLUMNS)/2)) "{{env}} - {{warn}}"
+printf "${red}%*s${reset}\n" $(( (ENV_LEN + COLUMNS) / 2 )) "$ENV_LINE"
 printf "\n"
-printf '\e[1;31m%*s\n\e[m' $((($COUNTOFHASH+$COLUMNS)/2)) "$HASHCHAR"
-echo
-printf '\e[1;31m%*s\n\e[m' $(((8+$SERVER_NOTE_LENGHT+$COLUMNS)/2)) "-->> {{note}} <<--"
+printf "${red}%s${reset}\n" "$HASHCHAR"
+printf "\n"
+printf "${red}%*s${reset}\n" $(( (NOTE_LEN + COLUMNS) / 2 )) "$NOTE_LINE"
+printf "\n"
+printf "${green}OS:${reset}     %s\n" "$DISTRIB_DESCRIPTION"
+printf "${green}Kernel:${reset} %s\n" "$(uname -r)"
+printf "${green}Uptime:${reset} %s\n" "$(uptime -p)"
+printf "\n"

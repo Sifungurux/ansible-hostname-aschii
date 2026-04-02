@@ -17,6 +17,9 @@ platforms:
 
 provisioner:
   name: ansible
+  log: true
+  options:
+    vvv: true
   env:
     ANSIBLE_ROLES_PATH: "${MOLECULE_PROJECT_DIRECTORY}/.."
   inventory:

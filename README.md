@@ -51,7 +51,18 @@ Contains hostname, environment, warning, and note from the role variables.
 
 ## Testing
 
-### Molecule (CI)
+### Molecule
+
+[Molecule](https://molecule.readthedocs.io/) tests the role end-to-end in a
+throwaway Debian 12 Docker container. It runs through four stages:
+
+1. **create** — starts a fresh container
+2. **converge** — applies the role
+3. **verify** — asserts the results (figlet installed, scripts deployed,
+   banner content correct, sshd config valid)
+4. **destroy** — removes the container
+
+Install dependencies and run the full test cycle:
 
 ```bash
 pip install molecule molecule-plugins[docker] ansible docker
@@ -59,16 +70,35 @@ pip install molecule molecule-plugins[docker] ansible docker
 molecule test
 ```
 
-### Lima (local)
+Run individual stages during development:
+
+```bash
+molecule converge        # apply the role only
+molecule verify          # run assertions only
+molecule converge verify # apply then verify without destroying
+molecule destroy         # clean up
+```
+
+The test scenario is in `molecule/default/`. Variables used during testing:
+
+| Variable | Test value |
+|----------|-----------|
+| `motd_env` | `TEST` |
+| `motd_warn` | `Molecule test instance` |
+| `motd_note` | `Automated test — do not use in production` |
+| `banner` | `true` |
+
+### Lima (local VM)
+
+Tests against a real Debian 12 VM using
+[Lima](https://lima-vm.io) (`brew install lima`):
 
 ```bash
 bash tests/test.sh
 ```
 
-The script creates a Debian 12 Lima VM, installs dependencies, and runs
-the playbook. Requires [Lima](https://lima-vm.io) (`brew install lima`).
-
-To clean up after testing:
+The script creates the VM on first run, reads SSH connection details
+from Lima's generated config, and runs the playbook. To clean up:
 
 ```bash
 limactl stop hostname-ascii-test

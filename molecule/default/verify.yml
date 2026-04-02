@@ -1,0 +1,69 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+  tasks:
+    - name: Check figlet is installed
+      ansible.builtin.command:
+        cmd: which figlet
+      changed_when: false
+
+    - name: Check dynmotd script exists and is executable
+      ansible.builtin.stat:
+        path: /usr/local/bin/dynmotd
+      register: _dynmotd
+
+    - name: Assert dynmotd is executable
+      ansible.builtin.assert:
+        that:
+          - _dynmotd.stat.exists
+          - _dynmotd.stat.executable
+
+    - name: Check dynmotd is present in /etc/profile
+      ansible.builtin.command:
+        cmd: grep -q '/usr/local/bin/dynmotd' /etc/profile
+      changed_when: false
+
+    - name: Run dynmotd script
+      ansible.builtin.command:
+        cmd: /usr/local/bin/dynmotd
+      register: _motd_output
+      changed_when: false
+
+    - name: Assert motd contains expected strings
+      ansible.builtin.assert:
+        that:
+          - "'TEST' in _motd_output.stdout"
+          - "'Molecule test instance' in _motd_output.stdout"
+          - "'Automated test' in _motd_output.stdout"
+
+    - name: Check SSH banner file exists
+      ansible.builtin.stat:
+        path: /etc/ssh/banner
+      register: _banner
+
+    - name: Assert SSH banner exists
+      ansible.builtin.assert:
+        that:
+          - _banner.stat.exists
+
+    - name: Read SSH banner contents
+      ansible.builtin.slurp:
+        src: /etc/ssh/banner
+      register: _banner_content
+
+    - name: Assert banner contains expected strings
+      ansible.builtin.assert:
+        that:
+          - "'TEST' in (_banner_content.content | b64decode)"
+          - "'Molecule test instance' in (_banner_content.content | b64decode)"
+
+    - name: Check sshd_config references banner
+      ansible.builtin.command:
+        cmd: grep -q '^Banner /etc/ssh/banner' /etc/ssh/sshd_config
+      changed_when: false
+
+    - name: Check sshd config is valid
+      ansible.builtin.command:
+        cmd: sshd -t
+      changed_when: false

@@ -6,6 +6,7 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+  workflow_dispatch:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
@@ -53,7 +54,5 @@ jobs:
 
       - name: Run Molecule
         run: molecule test
-        env:
-          ANSIBLE_ROLES_PATH: ".."
         env:
           ANSIBLE_ROLES_PATH: ".."
